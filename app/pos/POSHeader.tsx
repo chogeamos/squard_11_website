@@ -1,17 +1,26 @@
-
 'use client';
 
 import { useState } from 'react';
 
-export default function POSHeader({ 
-  userRole, 
-  onLogout, 
-  searchQuery, 
-  onSearchChange, 
-  selectedCategory, 
+type POSHeaderProps = {
+  userRole: string;
+  onLogout: () => void;
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  selectedCategory: string;
+  onCategoryChange: (categoryId: string) => void;
+  onBarcodeSearch: (barcode: string) => void;
+};
+
+export default function POSHeader({
+  userRole,
+  onLogout,
+  searchQuery,
+  onSearchChange,
+  selectedCategory,
   onCategoryChange,
-  onBarcodeSearch 
-}) {
+  onBarcodeSearch
+}: POSHeaderProps) {
   const [barcodeInput, setBarcodeInput] = useState('');
 
   const categories = [
@@ -23,7 +32,7 @@ export default function POSHeader({
     { id: 'snacks', name: 'Snacks', icon: 'ri-cake-line' }
   ];
 
-  const handleBarcodeSubmit = (e) => {
+  const handleBarcodeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (barcodeInput.trim()) {
       onBarcodeSearch(barcodeInput.trim());
@@ -67,7 +76,7 @@ export default function POSHeader({
           </form>
 
           <div className="text-sm text-gray-600">
-            {new Date().toLocaleString('en-KE', { 
+            {new Date().toLocaleString('en-KE', {
               timeZone: 'Africa/Nairobi',
               hour12: true
             })}
