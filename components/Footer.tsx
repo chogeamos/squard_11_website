@@ -78,8 +78,8 @@ export default function Footer() {
               </div>
               <div className="flex items-center">
                 <i className="ri-phone-line text-green-400 mr-3"></i>
-                <a href="tel:+254712345678" className="text-gray-400 hover:text-white transition-colors cursor-pointer">
-                  +254 712 345 678
+                <a href="tel:+254727987654" className="text-gray-400 hover:text-white transition-colors cursor-pointer">
+                  +254 727 987 654
                 </a>
               </div>
               <div className="flex items-center">
@@ -90,7 +90,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center">
                 <i className="ri-whatsapp-line text-green-400 mr-3"></i>
-                <a href="https://wa.me/254712345678" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors cursor-pointer">
+                <a href="https://wa.me/254727987654" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors cursor-pointer">
                   WhatsApp Us
                 </a>
               </div>
