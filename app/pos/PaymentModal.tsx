@@ -1,31 +1,44 @@
-
 'use client';
 
 import { useState } from 'react';
 
-export default function PaymentModal({ cart, onClose, onPaymentComplete }) {
-  const [paymentMethod, setPaymentMethod] = useState('cash');
+type CartItem = {
+  id: string;
+  name: string;
+  quantity: number;
+  price: number;
+};
+
+type PaymentModalProps = {
+  cart: CartItem[];
+  onClose: () => void;
+  onPaymentComplete: () => void;
+};
+
+export default function PaymentModal({
+  cart,
+  onClose,
+  onPaymentComplete
+}: PaymentModalProps) {
+  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'mpesa'>('cash');
   const [cashReceived, setCashReceived] = useState('');
   const [mpesaPhone, setMpesaPhone] = useState('');
   const [processing, setProcessing] = useState(false);
   const [paymentComplete, setPaymentComplete] = useState(false);
 
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const tax = subtotal * 0.16;
   const total = subtotal + tax;
-  
-  const change = paymentMethod === 'cash' ? Math.max(0, parseFloat(cashReceived || 0) - total) : 0;
+
+  const change =
+    paymentMethod === 'cash' ? Math.max(0, parseFloat(cashReceived || '0') - total) : 0;
 
   const handlePayment = async () => {
     setProcessing(true);
-    
-    // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     setProcessing(false);
     setPaymentComplete(true);
-    
-    // Print receipt (simulate)
+
     setTimeout(() => {
       printReceipt();
       onPaymentComplete();
@@ -43,8 +56,6 @@ export default function PaymentModal({ cart, onClose, onPaymentComplete }) {
       change: paymentMethod === 'cash' ? change : 0,
       timestamp: new Date().toLocaleString('en-KE', { timeZone: 'Africa/Nairobi' })
     };
-    
-    // In a real implementation, this would send data to a thermal printer
     console.log('Printing receipt:', receiptData);
   };
 
@@ -68,10 +79,7 @@ export default function PaymentModal({ cart, onClose, onPaymentComplete }) {
       <div className="bg-white rounded-lg max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="text-2xl font-bold text-gray-900">Payment</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <i className="ri-close-line text-2xl"></i>
           </button>
         </div>
@@ -85,7 +93,9 @@ export default function PaymentModal({ cart, onClose, onPaymentComplete }) {
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {cart.map((item) => (
                     <div key={item.id} className="flex justify-between text-sm">
-                      <span>{item.name} × {item.quantity}</span>
+                      <span>
+                        {item.name} × {item.quantity}
+                      </span>
                       <span>KES {(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
@@ -110,7 +120,7 @@ export default function PaymentModal({ cart, onClose, onPaymentComplete }) {
             {/* Payment Method */}
             <div>
               <h3 className="text-lg font-semibold mb-4">Payment Method</h3>
-              
+
               <div className="space-y-3 mb-6">
                 <label className="flex items-center space-x-3 cursor-pointer">
                   <input
@@ -118,7 +128,7 @@ export default function PaymentModal({ cart, onClose, onPaymentComplete }) {
                     name="payment"
                     value="cash"
                     checked={paymentMethod === 'cash'}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    onChange={(e) => setPaymentMethod(e.target.value as 'cash')}
                     className="w-4 h-4 text-green-600"
                   />
                   <div className="flex items-center space-x-2">
@@ -133,7 +143,7 @@ export default function PaymentModal({ cart, onClose, onPaymentComplete }) {
                     name="payment"
                     value="mpesa"
                     checked={paymentMethod === 'mpesa'}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    onChange={(e) => setPaymentMethod(e.target.value as 'mpesa')}
                     className="w-4 h-4 text-green-600"
                   />
                   <div className="flex items-center space-x-2">
@@ -157,7 +167,7 @@ export default function PaymentModal({ cart, onClose, onPaymentComplete }) {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg"
                     />
                   </div>
-                  
+
                   {cashReceived && parseFloat(cashReceived) >= total && (
                     <div className="bg-green-50 p-4 rounded-lg">
                       <div className="flex justify-between items-center">
@@ -198,7 +208,7 @@ export default function PaymentModal({ cart, onClose, onPaymentComplete }) {
             >
               Cancel
             </button>
-            
+
             <button
               onClick={handlePayment}
               disabled={
