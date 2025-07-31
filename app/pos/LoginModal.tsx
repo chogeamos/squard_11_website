@@ -1,39 +1,41 @@
-
 'use client';
 
 import { useState } from 'react';
 
-export default function LoginModal({ onLogin }) {
+type LoginModalProps = {
+  onLogin: (role: string) => void;
+};
+
+export default function LoginModal({ onLogin }: LoginModalProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const users = {
-    'admin': { password: 'admin123', role: 'admin' },
-    'cashier': { password: 'cashier123', role: 'cashier' },
-    'manager': { password: 'manager123', role: 'manager' }
+    admin: { password: 'admin123', role: 'admin' },
+    cashier: { password: 'cashier123', role: 'cashier' },
+    manager: { password: 'manager123', role: 'manager' },
   };
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    // Simulate login delay
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    const user = users[username.toLowerCase()];
+    const user = users[username.toLowerCase() as keyof typeof users];
     if (user && user.password === password) {
       onLogin(user.role);
     } else {
       setError('Invalid username or password');
     }
-    
+
     setLoading(false);
   };
 
-  const handleQuickLogin = (role) => {
+  const handleQuickLogin = (role: string) => {
     const userCredentials = Object.entries(users).find(([, user]) => user.role === role);
     if (userCredentials) {
       setUsername(userCredentials[0]);
